@@ -4,6 +4,7 @@ import time
 import pandas as pd
 from selenium.webdriver.common.by import By
 import yfinance as yf
+import matplotlib.pyplot as plt
 
 #diretorio onde será salva a lista de empresas da bolsa
 diretorio_download = "C:\\Users\\Pichau\\OneDrive\\FACULDADE\\DEV DE SISTEMAS PYTHON\\PYTHON AVANCADO ESP\\MAPA\\DOWNLOADS\\STOCK_LIST"
@@ -33,6 +34,13 @@ def main():
 
     # Pega as 10 que mais valorizaram ao longo do tempo
     filter_main_x_stocks(variation_through_time, 10)
+
+    #gera um gráfico comparativo
+    #ticker_to_compare = 'PETR4.SA'
+    #plot_sticker_vs_general(variation_through_time, ticker_to_compare)
+
+
+
 
 
 def get_historical_value(stock_list):
@@ -75,6 +83,23 @@ def filter_main_x_stocks(accum_result, quant):
     final_variation = (last_row - first_row) / first_row * 100
     final_variation.columns = ['Ativo','Variação %']
     print(final_variation.sort_values(ascending=False)[:quant])
+
+def plot_sticker_vs_general(hist_data, ticker):
+
+    df_results = hist_data
+    df_espec = df_results[ticker].to_frame()
+    df_ibov = df_results['saldo'].to_frame()
+    figure, left_ax = plt.subplots()
+    left_ax.plot(df_espec.index, df_espec[ticker], linestyle='--', color='blue')
+    left_ax.set_ylabel(ticker)
+
+    right_ax = left_ax.twinx()
+    right_ax.plot(df_ibov .index, df_ibov['saldo'], linestyle='--', color='red')
+    right_ax.set_ylabel('IBOV')
+    plt.show()
+
+
+
 
 
 
